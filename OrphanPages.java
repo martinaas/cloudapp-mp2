@@ -13,6 +13,8 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 // >>> Don't Change
@@ -26,20 +28,48 @@ public class OrphanPages extends Configured implements Tool {
 
     @Override
     public int run(String[] args) throws Exception {
-        //TODO
+        Job job = Job.getInstance(this.getConf(), "Orphan Pages");
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        job.setMapperClass(LinkCountMap.class);
+        job.setReducerClass(OrphanPageReduce.class);
+
+        FileInputFormat.setInputPaths(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        job.setJarByClass(LinkCountMap.class);
+        return job.waitForCompletion(true) ? 0 : 1;
     }
 
     public static class LinkCountMap extends Mapper<Object, Text, IntWritable, IntWritable> {
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            //TODO
+            String line = value.toString();
+            StringTokenizer stringTokenizer1 = new StringTokenizer(line, ":");
+            String pageId = stringTokenizer1.nextToken();
+            context.write(new IntWritable(Integer.valueOf(pageId)), new IntWritable(0));
+            StringTokenizer stringTokenizer2 = new StringTokenizer(stringTokenizer1.nextToken(), ",");
+            while (stringTokenizer2.hasMoreTokens()) {
+                String nextToken = stringTokenizer2.nextToken();
+                context.write(new IntWritable(Integer.valueOf(nextToken)), new IntWritable(1));
+            }
         }
     }
 
     public static class OrphanPageReduce extends Reducer<IntWritable, IntWritable, IntWritable, NullWritable> {
         @Override
         public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-            //TODO
+            int sum = 0;
+            for (IntWritable val : values) {
+                sum += val.get();
+            }
+            if (sum == 0) {
+                context.write(key, NullWritable.get());
+            }
         }
     }
 }
