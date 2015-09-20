@@ -231,7 +231,7 @@ public class TopTitleStatistics extends Configured implements Tool {
 
             var = (int)Math.floor(temp/countToTitleMap.size());
 
-            context.write(new Text("Mean"), new IntWritable(mean);
+            context.write(new Text("Mean"), new IntWritable(mean));
             context.write(new Text("Sum"), new IntWritable((int)Math.floor(sum)));
             context.write(new Text("Min"), new IntWritable(min));
             context.write(new Text("Max"), new IntWritable(max));
