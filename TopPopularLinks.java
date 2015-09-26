@@ -51,10 +51,10 @@ public class TopPopularLinks extends Configured implements Tool {
     @Override
     public int run(String[] args) throws Exception {
         Job job = Job.getInstance(this.getConf(), "Top Popular Links");
-        job.setOutputKeyClass(IntWritable.class);
+        job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
-        job.setMapOutputKeyClass(IntWritable.class);
+        job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
 
         job.setMapperClass(LinkCountMap.class);
@@ -109,10 +109,12 @@ public class TopPopularLinks extends Configured implements Tool {
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String line = value.toString();
-            StringTokenizer stringTokenizer = new StringTokenizer(line, ":");
-            StringTokenizer linksTokenizer = new StringTokenizer(stringTokenizer.nextToken(), " ");
-            while (linksTokenizer.hasMoreTokens()) {
-                String nextToken = linksTokenizer.nextToken();
+            StringTokenizer stringTokenizer1 = new StringTokenizer(line, ":");
+            String pageId = stringTokenizer1.nextToken();
+            context.write(new IntWritable(Integer.valueOf(pageId)), new IntWritable(0));
+            StringTokenizer stringTokenizer2 = new StringTokenizer(stringTokenizer1.nextToken(), ",");
+            while (stringTokenizer2.hasMoreTokens()) {
+                String nextToken = stringTokenizer2.nextToken();
                 context.write(new IntWritable(Integer.valueOf(nextToken)), new IntWritable(1));
             }
         }
@@ -125,9 +127,7 @@ public class TopPopularLinks extends Configured implements Tool {
             for (IntWritable val : values) {
                 sum += val.get();
             }
-            if (sum > 0) {
-                context.write(key, new IntWritable(sum));
-            }
+            context.write(key, new IntWritable(sum));
         }
     }
 
