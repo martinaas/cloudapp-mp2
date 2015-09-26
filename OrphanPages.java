@@ -51,11 +51,11 @@ public class OrphanPages extends Configured implements Tool {
             String line = value.toString();
             StringTokenizer stringTokenizer1 = new StringTokenizer(line, ":");
             String pageId = stringTokenizer1.nextToken();
-            context.write(new Text(pageId), new IntWritable(0));
+            context.write(new IntWritable(Integer.valueOf(pageId)), new IntWritable(0));
             StringTokenizer stringTokenizer2 = new StringTokenizer(stringTokenizer1.nextToken(), " ");
             while (stringTokenizer2.hasMoreTokens()) {
                 String nextToken = stringTokenizer2.nextToken();
-                context.write(new Text(nextToken), new IntWritable(1));
+                context.write(new IntWritable(Integer.valueOf(nextToken)), new IntWritable(1));
             }
         }
     }
