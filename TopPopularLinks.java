@@ -56,7 +56,7 @@ public class TopPopularLinks extends Configured implements Tool {
         fs.delete(tmpPath, true);
 
         Job jobA = Job.getInstance(conf, "Links Count");
-        jobA.setOutputKeyClass(Text.class);
+        jobA.setOutputKeyClass(IntWritable.class);
         jobA.setOutputValueClass(IntWritable.class);
 
         jobA.setMapperClass(LinkCountMap.class);
@@ -69,7 +69,7 @@ public class TopPopularLinks extends Configured implements Tool {
         jobA.waitForCompletion(true);
 
         Job jobB = Job.getInstance(conf, "Top Popular LinksT");
-        jobB.setOutputKeyClass(Text.class);
+        jobB.setOutputKeyClass(IntWritable.class);
         jobB.setOutputValueClass(IntWritable.class);
 
         jobB.setMapOutputKeyClass(NullWritable.class);
