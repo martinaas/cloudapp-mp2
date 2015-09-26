@@ -162,7 +162,7 @@ public class PopularityLeague extends Configured implements Tool {
 
             for (Map.Entry<Integer, Integer> entry : popularityMap.entrySet())
             {
-                if (entry.getValue() < max || league.contains(entry.getKey().toString())) {
+                if (entry.getValue() < max || league.contains(String.valueOf(entry.getKey()))) {
                     Integer[] integers = {entry.getKey(),
                             entry.getValue()};
                     IntArrayWritable val = new
