@@ -151,33 +151,32 @@ public class TopPopularLinks extends Configured implements Tool {
 
     public static class TopLinksReduce extends Reducer<NullWritable, IntArrayWritable, IntWritable, IntWritable> {
         Integer N;
+        private TreeSet<Pair<Integer, Integer>> countToLinksMap =
+                new TreeSet<Pair<Integer, Integer>>();
 
         @Override
         protected void setup(Context context) throws IOException,InterruptedException {
             Configuration conf = context.getConfiguration();
             this.N = conf.getInt("N", 10);
         }
-        private TreeSet<Pair<Integer, Integer>> countToLinksMap =
-                new TreeSet<Pair<Integer, Integer>>();
 
         @Override
-        public void reduce(NullWritable key, IntArrayWritable values, Context context) throws IOException, InterruptedException {
-            Integer[] array = (Integer[]) values.toArray();
-            for (int x = 0; x < array.length; x = x+2)
-            {
-                Integer pageNo = array[x];
-                Integer count = array[x+1];
+        public void reduce(NullWritable key, Iterable<IntArrayWritable> values, Context context) throws IOException, InterruptedException {
+            for (IntArrayWritable val: values) {
+                Integer[] pair= (Integer[]) val.toArray();
+                Integer pageId = pair[0];
+                Integer count =
+                        pair[1];
                 countToLinksMap.add(new Pair<Integer,
-                        Integer>(pageNo, count));
+                        Integer>(pageId, count));
                 if (countToLinksMap.size() > N) {
 
                     countToLinksMap.remove(countToLinksMap.first());
                 }
             }
-
-            for (Pair<Integer, Integer> item : countToLinksMap) {
-                IntWritable count = new IntWritable(item.second);
+            for (Pair<Integer, Integer> item: countToLinksMap) {
                 IntWritable pageId = new IntWritable(item.first);
+                IntWritable count = new IntWritable(item.first);
                 context.write(pageId, count);
             }
         }
