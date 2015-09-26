@@ -129,9 +129,9 @@ public class TopPopularLinks extends Configured implements Tool {
         @Override
         public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
             Integer count = Integer.parseInt(value.toString());
-            Integer page = Integer.parseInt(key.toString());
-            topLinksMap.add(new Pair<Integer, Integer>(page,
-                    count));
+            Integer pageId = Integer.parseInt(key.toString());
+            topLinksMap.add(new Pair<Integer, Integer>(count,
+                    pageId));
             if (topLinksMap.size() > N) {
                 topLinksMap.remove(topLinksMap.first());
             }
@@ -140,8 +140,8 @@ public class TopPopularLinks extends Configured implements Tool {
         @Override
         protected void cleanup(Context context) throws IOException, InterruptedException {
             for (Pair<Integer, Integer> item : topLinksMap) {
-                Integer[] integers = {item.first,
-                        item.second};
+                Integer[] integers = {item.second,
+                        item.first};
                 IntArrayWritable val = new
                         IntArrayWritable(integers);
                 context.write(NullWritable.get(), val);
@@ -168,16 +168,16 @@ public class TopPopularLinks extends Configured implements Tool {
                 Integer count =
                         Integer.parseInt(pair[1].toString());
                 countToLinksMap.add(new Pair<Integer,
-                        Integer>(pageId, count));
+                        Integer>(count, pageId));
                 if (countToLinksMap.size() > N) {
 
                     countToLinksMap.remove(countToLinksMap.first());
                 }
             }
             for (Pair<Integer, Integer> item: countToLinksMap) {
-                IntWritable pageId = new IntWritable(item.first);
-                IntWritable count = new IntWritable(item.second);
-                context.write(pageId, count);
+                IntWritable id = new IntWritable(item.second);
+                IntWritable value = new IntWritable(item.first);
+                context.write(id, value);
             }
         }
     }
