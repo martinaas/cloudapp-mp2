@@ -187,15 +187,17 @@ public class PopularityLeague extends Configured implements Tool {
             }
 
             for (String leaguePageId : league) {
-                Integer leaguePagePopularity = tempMap.get(Integer.parseInt(leaguePageId));
-                int counter = 0;
-                if (leaguePagePopularity != null) {
-                    for (Map.Entry<Integer, Integer> entry : tempMap.entrySet()) {
-                        if (leaguePagePopularity.intValue() > entry.getValue())
-                            counter++;
+                if (tempMap.containsKey(Integer.parseInt(leaguePageId))) {
+                    Integer leaguePagePopularity = tempMap.get(Integer.parseInt(leaguePageId));
+                    int counter = 0;
+                    if (leaguePagePopularity != null) {
+                        for (Map.Entry<Integer, Integer> entry : tempMap.entrySet()) {
+                            if (leaguePagePopularity.intValue() > entry.getValue())
+                                counter++;
+                        }
                     }
+                    ranksMap.put(Integer.parseInt(leaguePageId), counter);
                 }
-                ranksMap.put(Integer.parseInt(leaguePageId), counter);
             }
 
             for (Map.Entry<Integer, Integer> entry : ranksMap.entrySet()) {
