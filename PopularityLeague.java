@@ -157,7 +157,6 @@ public class PopularityLeague extends Configured implements Tool {
                 if (memberPopularity != null && max < memberPopularity)
                 {
                     max = memberPopularity.intValue();
-                    System.out.println(">>>>>>>>>>>>>>>> Max "+max);
                 }
             }
 
@@ -198,23 +197,28 @@ public class PopularityLeague extends Configured implements Tool {
                 tempMap.put(pageId, count);
             }
 
-            for (String leaguePageId : league) {
-                Integer leaguePagePopularity = tempMap.get(leaguePageId);
-                int counter = 0;
-                if (leaguePagePopularity != null) {
-                    for (Map.Entry<Integer, Integer> entry : tempMap.entrySet()) {
-                        if (leaguePagePopularity > entry.getValue())
-                            counter ++;
-                    }
-                }
-                ranksMap.put(Integer.parseInt(leaguePageId), counter);
-            }
-
-            for (Map.Entry<Integer, Integer> entry : ranksMap.entrySet()) {
+            for (Map.Entry<Integer, Integer> entry : tempMap.entrySet()) {
                 IntWritable id = new IntWritable(entry.getKey());
                 IntWritable value = new IntWritable(entry.getValue());
                 context.write(id, value);
             }
+//            for (String leaguePageId : league) {
+//                Integer leaguePagePopularity = tempMap.get(leaguePageId);
+//                int counter = 0;
+//                if (leaguePagePopularity != null) {
+//                    for (Map.Entry<Integer, Integer> entry : tempMap.entrySet()) {
+//                        if (leaguePagePopularity > entry.getValue())
+//                            counter ++;
+//                    }
+//                }
+//                ranksMap.put(Integer.parseInt(leaguePageId), counter);
+//            }
+//
+//            for (Map.Entry<Integer, Integer> entry : ranksMap.entrySet()) {
+//                IntWritable id = new IntWritable(entry.getKey());
+//                IntWritable value = new IntWritable(entry.getValue());
+//                context.write(id, value);
+//            }
         }
     }
 }
