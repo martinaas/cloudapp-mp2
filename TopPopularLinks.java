@@ -163,10 +163,10 @@ public class TopPopularLinks extends Configured implements Tool {
         @Override
         public void reduce(NullWritable key, Iterable<IntArrayWritable> values, Context context) throws IOException, InterruptedException {
             for (IntArrayWritable val: values) {
-                Integer[] pair= (Integer[]) val.toArray();
-                Integer pageId = pair[0];
+                IntWritable[] pair= (IntWritable[]) val.toArray();
+                Integer pageId = Integer.parseInt(pair[0].toString());
                 Integer count =
-                        pair[1];
+                        Integer.parseInt(pair[1].toString());
                 countToLinksMap.add(new Pair<Integer,
                         Integer>(pageId, count));
                 if (countToLinksMap.size() > N) {
