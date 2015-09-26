@@ -157,6 +157,7 @@ public class PopularityLeague extends Configured implements Tool {
                 if (memberPopularity != null && max < memberPopularity)
                 {
                     max = memberPopularity.intValue();
+                    System.out.println(">>>>>>>>>>>>>>>> Max "+max);
                 }
             }
 
