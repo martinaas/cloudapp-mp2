@@ -51,10 +51,10 @@ public class TopPopularLinks extends Configured implements Tool {
     @Override
     public int run(String[] args) throws Exception {
         Job job = Job.getInstance(this.getConf(), "Top Popular Links");
-        job.setOutputKeyClass(Text.class);
+        job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(IntWritable.class);
 
-        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputKeyClass(IntWritable.class);
         job.setMapOutputValueClass(IntWritable.class);
 
         job.setMapperClass(LinkCountMap.class);
