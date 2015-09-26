@@ -209,6 +209,7 @@ public class PopularityLeague extends Configured implements Tool {
                         //counter++;
                     }
                 }
+                else counter = 444;
                 ranksMap.put(Integer.parseInt(leaguePageId), counter);
             }
 
