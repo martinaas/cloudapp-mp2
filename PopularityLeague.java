@@ -149,20 +149,9 @@ public class PopularityLeague extends Configured implements Tool {
 
         @Override
         protected void cleanup(Context context) throws IOException, InterruptedException {
-            int max = 0;
-
-            for (String leaguePageId : league)
-            {
-                Integer memberPopularity = popularityMap.get(Integer.parseInt(leaguePageId));
-                if (memberPopularity != null && max < memberPopularity)
-                {
-                    max = memberPopularity.intValue();
-                }
-            }
-
             for (Map.Entry<Integer, Integer> entry : popularityMap.entrySet())
             {
-                if (entry.getValue() < max || league.contains(String.valueOf(entry.getKey()))) {
+                if (league.contains(String.valueOf(entry.getKey()))) {
                     Integer[] integers = {entry.getKey(),
                             entry.getValue()};
                     IntArrayWritable val = new
@@ -198,15 +187,14 @@ public class PopularityLeague extends Configured implements Tool {
             }
 
             for (String leaguePageId : league) {
-                Integer leaguePagePopularity = tempMap.get(Integer.parseInt(leaguePageId));
+                Integer leaguePagePopularity = tempMap.get(leaguePageId);
                 int counter = 0;
                 if (leaguePagePopularity != null) {
                     for (Map.Entry<Integer, Integer> entry : tempMap.entrySet()) {
                         if (leaguePagePopularity.intValue() > entry.getValue())
-                        counter++;
+                            counter++;
                     }
                 }
-
                 ranksMap.put(Integer.parseInt(leaguePageId), counter);
             }
 
