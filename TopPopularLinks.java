@@ -176,7 +176,7 @@ public class TopPopularLinks extends Configured implements Tool {
             }
             for (Pair<Integer, Integer> item: countToLinksMap) {
                 IntWritable pageId = new IntWritable(item.first);
-                IntWritable count = new IntWritable(item.first);
+                IntWritable count = new IntWritable(item.second);
                 context.write(pageId, count);
             }
         }
